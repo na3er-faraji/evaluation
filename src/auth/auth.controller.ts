@@ -14,12 +14,20 @@ import { LoginDto } from './dto/login.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @ApiOperation({
+    summary: 'Register a new user',
+    description: 'Creates a new user account. Typically via a signup form.',
+  })
   @Post('register')
   async register(@Body() dto: RegisterUserDto) {
     return await this.authService.register(dto);
   }
 
-  @ApiOperation({ summary: 'User login' })
+  @ApiOperation({
+    summary: 'User login',
+    description:
+      'Authenticates a user using email and password, returns access and refresh tokens.',
+  })
   @ApiBody({ type: LoginDto })
   @UseGuards(LocalAuthGuard)
   @Post('login')
@@ -28,16 +36,25 @@ export class AuthController {
   }
 
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Get new access token' })
+  @ApiOperation({
+    summary: 'Refresh access token',
+    description:
+      'Generates a new access token using a valid refresh token. Refresh token must be sent in Authorization header as Bearer token.',
+  })
   @UseGuards(RefreshAuthGuard)
   @Post('refresh')
   async getRefreshToken(@CurrentUser() userPayload: UserInfo) {
     return await this.authService.refreshToken(userPayload);
   }
 
+  @ApiOperation({
+    summary: 'Get user profile',
+    description:
+      'Returns the profile information of the currently authenticated user. Requires a valid access token.',
+  })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
-  @Get('profile')
+  @Get('me')
   getProfile(@CurrentUser() user: UserInfo) {
     return user;
   }
