@@ -20,25 +20,26 @@ export class UserService {
 
   async create(createUserDto: CreateUserDto) {
     await this.validateCreateUserDto(createUserDto);
-    return this.usersRepository.create({
+    const user = this.usersRepository.create({
       ...createUserDto,
       password: await bcrypt.hash(createUserDto.password, 10),
     });
+
+    return this.usersRepository.save(user);
   }
 
   async register(createUserDto: RegisterUserDto) {
-    this.create({ ...createUserDto, role: UserRole.USER });
+    return await this.create({ ...createUserDto, role: UserRole.USER });
   }
 
   async validateCreateUserDto(createUserDto: CreateUserDto) {
-    try {
-      await this.usersRepository.findOne({
-        where: { email: createUserDto.email },
-      });
-    } catch (error) {
-      return;
+    const existingUser = await this.usersRepository.findOne({
+      where: { email: createUserDto.email },
+    });
+
+    if (existingUser) {
+      throw new UnprocessableEntityException('Email already exists');
     }
-    throw new UnprocessableEntityException('Email already exists');
   }
 
   async validateUser(email: string, password: string) {
