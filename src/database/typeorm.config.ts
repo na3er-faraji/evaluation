@@ -1,6 +1,5 @@
 import { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { createDatabase } from 'typeorm-extension';
 
 export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
   imports: [ConfigModule],
@@ -17,11 +16,6 @@ export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
       autoLoadEntities: true,
       synchronize: true,
     };
-
-    await createDatabase({
-      ifNotExist: true,
-      options,
-    });
 
     return options;
   },
