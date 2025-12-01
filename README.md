@@ -2,12 +2,12 @@
 
 A simple REST API built with **NestJS**, designed to manage users and evaluations. The project includes:
 
-* **User registration & login** with JWT authentication
-* **CRUD operations** for an item called “Evaluation”
-* **Pagination** on `GET /evaluations`
-* **Role management** (`admin` and `user`)
-* **Swagger / OpenAPI documentation**
-* **Dockerized setup** with PostgreSQL and Redis
+- **User registration & login** with JWT authentication
+- **CRUD operations** for an item called “Evaluation”
+- **Pagination** on `GET /evaluations`
+- **Role management** (`admin` and `user`)
+- **Swagger / OpenAPI documentation**
+- **Dockerized setup** with PostgreSQL and Redis
 
 ---
 
@@ -69,9 +69,9 @@ docker-compose up -d
 
 Services included:
 
-* **PostgreSQL** (`postgres:16`) on port `5432`
-* **Redis** (`redis:7`) on port `6379`
-* **NestJS API** on port `3000`
+- **PostgreSQL** (`postgres:16`) on port `5432`
+- **Redis** (`redis:7`) on port `6379`
+- **NestJS API** on port `3000`
 
 Check that all containers are running:
 
@@ -83,8 +83,8 @@ docker ps
 
 ## Accessing the API
 
-* **API Base URL:** `http://localhost:3000`
-* **Swagger / OpenAPI Docs:** `http://localhost:3000/api`
+- **API Base URL:** `http://localhost:3000`
+- **Swagger / OpenAPI Docs:** `http://localhost:3000/api`
 
 ---
 
@@ -92,32 +92,33 @@ docker ps
 
 ### **Auth**
 
-* `POST /auth/register` – Register a new user
-* `POST /auth/login` – Login with credentials
-* `POST /auth/refresh` – Refresh JWT token
-* `POST /auth/me` – Get current user info
+- `POST /auth/register` – Register a new user
+- `POST /auth/login` – Login with credentials
+- `POST /auth/refresh` – Refresh JWT token
+- `POST /auth/me` – Get current user info
 
 ### **Users**
-* `POST /users/` – Register a new user by admin
+
+- `POST /users/` – Register a new user by admin
 
 ### **Evaluations**
 
-* `GET /evaluations` – List evaluations (supports `page` and `limit` query params)
-* `POST /evaluations` – Create a new evaluation
-* `GET /evaluations/:id` – Get evaluation by ID
-* `PATCH /evaluations/:id` – Update evaluation
-* `DELETE /evaluations/:id` – Delete evaluation
+- `GET /evaluations` – List evaluations (supports `page` and `limit` query params)
+- `POST /evaluations` – Create a new evaluation
+- `GET /evaluations/:id` – Get evaluation by ID
+- `PATCH /evaluations/:id` – Update evaluation
+- `DELETE /evaluations/:id` – Delete evaluation
 
 ---
 
 ## Roles
 
-- **admin** – Can perform all actions on evaluations **and** can register new users with a specific role.
-- **user** – Can perform all actions on evaluations, but **cannot** create new users with admin role.
+- **admin** – Can perform all actions on evaluations and can register new users with any role.
+- **user** – Can perform only read and delete actions on their own evaluations, and cannot create or update evaluations for other users. Also, cannot create new users with the admin role.
 
 ---
 
 ## Notes
 
-* Make sure to **rename `env.example` to `.env`** and set the proper database/Redis credentials before starting Docker.
-* All service names in Docker Compose match the hostnames used in the `.env` file (`postgres`, `redis`) to ensure connectivity between containers.
+- Make sure to **rename `env.example` to `.env`** and set the proper database/Redis credentials before starting Docker.
+- All service names in Docker Compose match the hostnames used in the `.env` file (`postgres`, `redis`) to ensure connectivity between containers.
