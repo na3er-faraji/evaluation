@@ -33,24 +33,23 @@ export class AuthService {
       email: user.email,
       role: user.role,
     };
-    const expires = new Date();
-    expires.setSeconds(
-      expires.getSeconds() + this.configService.get('JWT_EXPIRATION'),
-    );
 
-    const expiresRefresh = new Date();
-    expiresRefresh.setSeconds(
-      expires.getSeconds() + this.configService.get('JWT_REFRESH_EXPIRATION'),
-    );
-
-    const accessToken = await this.jwtService.signAsync(payload);
-
-    const refreshToken = await this.jwtService.signAsync(payload, {
-      expiresIn: `${this.configService.get('JWT_REFRESH_EXPIRATION')}s`,
-      secret: this.configService.get('JWT_REFRESH_SECRET'),
+    const accessToken = await this.jwtService.signAsync(payload, {
+      secret: this.configService.get('JWT_SECRET'),
+      expiresIn: `${this.configService.get('JWT_EXPIRATION')}s`,
     });
 
-    await this.redis.set(user.email!, refreshToken, 'EX', 10000);
+    const refreshToken = await this.jwtService.signAsync(payload, {
+      secret: this.configService.get('JWT_REFRESH_SECRET'),
+      expiresIn: `${this.configService.get('JWT_REFRESH_EXPIRATION')}s`,
+    });
+
+    await this.redis.set(
+      user.email,
+      refreshToken,
+      'EX',
+      Number(this.configService.get('JWT_REFRESH_EXPIRATION')),
+    );
 
     return { accessToken, refreshToken };
   }
